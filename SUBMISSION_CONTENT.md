@@ -2,13 +2,12 @@
 
 ## 1. GitHub Repository Link
 
-**GitHub Repository:** `PASTE_GITHUB_REPOSITORY_LINK_HERE`
-
-The repository contains the complete source code, requirements file, README, test data, trained model files and generated experiment artifacts.
+**GitHub Repository:** 
+https://github.com/heevithar-pixel/fetal-health-classification-ml
 
 ## 2. Live Streamlit Application Link
 
-**Streamlit App:** `PASTE_STREAMLIT_APP_LINK_HERE`
+**Streamlit App:** https://fetal-health-classification-ml-4doq6p7fpo4cm8bd89trus.streamlit.app
 
 ## 3. BITS Virtual Lab Execution Screenshot
 
