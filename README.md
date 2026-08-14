@@ -95,7 +95,11 @@ The original workbook also contains **CLASS**, another expert-derived classifica
 
 ## c. GitHub Repository Link
 
-**GitHub Repository:** `PASTE_GITHUB_REPOSITORY_LINK_HERE`
+**GitHub Repository:**
+https://github.com/heevithar-pixel/fetal-health-classification-ml
+
+**Live Streamlit App:**
+https://fetal-health-classification-ml-4doq6p7fpo4cm8bd89trus.streamlit.app
 
 The repository contains the complete source code, pinned model-runtime dependencies, README, test CSV, model definitions, saved trained models and generated experiment artifacts.
 
