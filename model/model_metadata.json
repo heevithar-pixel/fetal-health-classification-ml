@@ -1,0 +1,59 @@
+{
+  "dataset_rows_original": 2126,
+  "duplicate_rows_removed": 12,
+  "dataset_rows_clean": 2114,
+  "training_rows": 1691,
+  "test_rows": 423,
+  "test_size": 0.2,
+  "random_state": 42,
+  "cv_folds": 5,
+  "cv_selection_metric": "macro F1",
+  "target": "NSP",
+  "features": [
+    "LB",
+    "AC",
+    "FM",
+    "UC",
+    "DL",
+    "DS",
+    "DP",
+    "ASTV",
+    "MSTV",
+    "ALTV",
+    "MLTV",
+    "Width",
+    "Min",
+    "Max",
+    "Nmax",
+    "Nzeros",
+    "Mode",
+    "Mean",
+    "Median",
+    "Variance",
+    "Tendency"
+  ],
+  "best_parameters": {
+    "Logistic Regression": {
+      "classifier__C": 10.0,
+      "classifier__class_weight": null
+    },
+    "Decision Tree": {
+      "max_depth": 10,
+      "min_samples_leaf": 2
+    },
+    "K-Nearest Neighbor": {
+      "classifier__n_neighbors": 3,
+      "classifier__weights": "distance"
+    },
+    "Naive Bayes": {
+      "var_smoothing": 1e-11
+    },
+    "Random Forest": {
+      "class_weight": "balanced",
+      "max_depth": null,
+      "min_samples_leaf": 2
+    }
+  },
+  "sklearn_version": "1.8.0",
+  "joblib_version": "1.5.3"
+}
