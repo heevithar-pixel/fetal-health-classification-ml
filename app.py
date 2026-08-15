@@ -21,7 +21,7 @@ from config import (
 from ml_utils import evaluate_model, normalize_target
 
 st.set_page_config(
-    page_title="Fetal Health Classification",
+    page_title="CTG Fetal State Classifier",
     page_icon="🫀",
     layout="wide",
 )
@@ -29,8 +29,13 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    .main-title {font-size: 2.25rem; font-weight: 750; margin-bottom: .2rem;}
-    .subtle {color: #6b7280; margin-bottom: 1rem;}
+    .block-container {padding-top: 1.4rem; padding-bottom: 2rem;}
+    .main-title {font-size: 1.75rem; font-weight: 700; margin-bottom: .1rem;}
+    .subtle {color: #6b7280; font-size: .92rem; margin-bottom: .75rem;}
+    [data-testid="stMetricValue"] {font-size: 1.55rem;}
+    [data-testid="stMetricLabel"] {font-size: .82rem;}
+    h2 {font-size: 1.35rem !important;}
+    h3 {font-size: 1.1rem !important;}
     </style>
     """,
     unsafe_allow_html=True,
@@ -124,24 +129,24 @@ if model_warnings:
     )
 
 st.markdown(
-    '<div class="main-title">Fetal Health Classification Dashboard</div>',
+    '<div class="main-title">CTG Fetal State Classifier</div>',
     unsafe_allow_html=True,
 )
 st.markdown(
-    '<div class="subtle">Compare five tuned classifiers using 21 cardiotocography measurements.</div>',
+    '<div class="subtle">Multiclass benchmark of five tuned classifiers on 21 cardiotocography features.</div>',
     unsafe_allow_html=True,
 )
 
 with st.sidebar:
-    st.header("Project Controls")
+    st.header("Evaluation Controls")
     uploaded_file = st.file_uploader(
-        "Upload test data (CSV)",
+        "Test dataset (CSV)",
         type=["csv"],
         help="The CSV must contain all 21 CTG feature columns. Include NSP to calculate evaluation metrics.",
     )
-    selected_model = st.selectbox("Select model", list(models.keys()))
+    selected_model = st.selectbox("Classifier", list(models.keys()))
     st.divider()
-    st.subheader("Target classes")
+    st.subheader("Target Encoding")
     st.write("**1** — Normal")
     st.write("**2** — Suspect")
     st.write("**3** — Pathologic")
@@ -171,17 +176,19 @@ if has_target:
 else:
     y_eval = None
 
-c1, c2, c3, c4 = st.columns(4)
-c1.metric("Rows loaded", f"{len(eval_data):,}")
-c2.metric("Input features", len(FEATURES))
-c3.metric("Models available", len(models))
-c4.metric("Evaluation labels", "Available" if has_target else "Prediction only")
-st.caption(f"Data source: {data_source}")
+label_status = "available" if has_target else "prediction-only"
+st.caption(
+    f"**Evaluation set:** {len(eval_data):,} samples  ·  "
+    f"**Features:** {len(FEATURES)}  ·  "
+    f"**Classifiers:** {len(models)}  ·  "
+    f"**Labels:** {label_status}  ·  "
+    f"**Source:** {data_source}"
+)
 
 if has_target:
     comparison_df, detailed_results = evaluate_labeled_data(csv_bytes)
 
-    st.subheader("Model Comparison on Current Test Data")
+    st.subheader("Holdout Test Benchmark")
     st.dataframe(
         comparison_df.style.format(
             {
@@ -203,18 +210,17 @@ if has_target:
     selected_predictions = selected["predictions"]
     selected_probabilities = selected["probabilities"]
 
-    st.subheader(f"Detailed Evaluation — {selected_model}")
+    st.subheader(f"Classifier Diagnostics — {selected_model}")
     metric_columns = st.columns(6)
     metric_names = ["Accuracy", "AUC", "Precision", "Recall", "F1", "MCC"]
     for column, metric_name in zip(metric_columns, metric_names):
         column.metric(metric_name, display_metric(selected_metrics[metric_name]))
 
     st.caption(
-        "The assignment table reports weighted Precision/Recall/F1. "
-        "Macro and class-wise metrics are also inspected so the dominant Normal class does not hide minority-class performance."
+        "Primary metrics use weighted averaging; macro and class-wise diagnostics are retained for minority-class analysis."
     )
 
-    with st.expander("Additional imbalance-aware metrics"):
+    with st.expander("Macro-averaged diagnostics"):
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Macro Precision", display_metric(selected_metrics["Macro Precision"]))
         m2.metric("Macro Recall", display_metric(selected_metrics["Macro Recall"]))
@@ -287,7 +293,7 @@ else:
 
 cv_path = ARTIFACT_DIR / "cv_model_selection.csv"
 if cv_path.exists():
-    with st.expander("Model development: 5-fold Stratified CV selections"):
+    with st.expander("Cross-validation model selection"):
         cv_summary = pd.read_csv(cv_path)[
             [
                 "ML Model Name",
@@ -313,12 +319,12 @@ if cv_path.exists():
             hide_index=True,
         )
         st.caption(
-            "CV was performed only on the training partition. The bundled test_data.csv remained untouched until final evaluation."
+            "5-fold Stratified CV was restricted to the training partition; the holdout test set remained untouched for final evaluation."
         )
 
 importance_path = ARTIFACT_DIR / "random_forest_feature_importance.csv"
 if importance_path.exists():
-    with st.expander("Model insight: Random Forest feature importance"):
+    with st.expander("Random Forest feature importance"):
         importance = pd.read_csv(importance_path).head(12).sort_values("Importance")
         fig, ax = plt.subplots(figsize=(8, 5.4))
         ax.barh(importance["Feature"], importance["Importance"])
@@ -329,6 +335,6 @@ if importance_path.exists():
             "Feature importance describes contribution to this fitted model; it does not establish medical causation."
         )
 
-with st.expander("View input data preview and feature list"):
+with st.expander("Input schema and sample records"):
     st.dataframe(eval_data.head(20), use_container_width=True)
     st.write("**21 CTG input features:**", ", ".join(FEATURES))
