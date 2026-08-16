@@ -225,4 +225,3 @@ python -m streamlit run app.py
 1. Campos, D. & Bernardes, J. (2000). *Cardiotocography* [Dataset]. UCI Machine Learning Repository. DOI: 10.24432/C51S4N
 2. UCI Machine Learning Repository — Cardiotocography: https://archive.ics.uci.edu/dataset/193/cardiotocography
 
-> Educational machine-learning demonstration only. Not intended for clinical decision-making.
