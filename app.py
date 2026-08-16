@@ -29,8 +29,17 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    .block-container {padding-top: 1.4rem; padding-bottom: 2rem;}
-    .main-title {font-size: 1.75rem; font-weight: 700; margin-bottom: .1rem;}
+    .block-container {
+        padding-top: 3.6rem !important;
+        padding-bottom: 2rem;
+    }
+    
+    .main-title {
+        font-size: 1.65rem;
+        font-weight: 700;
+        margin-bottom: .1rem;
+        line-height: 1.25;
+    }
     .subtle {color: #6b7280; font-size: .92rem; margin-bottom: .75rem;}
     [data-testid="stMetricValue"] {font-size: 1.55rem;}
     [data-testid="stMetricLabel"] {font-size: .82rem;}
